@@ -29,6 +29,7 @@ library(BayesFactor)
 library(easystats)
 library(formatstats)
 
+library(lme4)
 library(papaja)
 library(patchwork)
 library(psych)
@@ -61,6 +62,37 @@ mywsci <- function(x) {
 cvd_colors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000")
 
 
+# Demographics ------------------------------------------------------------
+
+## Create data frames -----
+# Bird age
+bird_ages <- data.frame(subject = c("Fozzie", "Dartagnan", "He-man", "Uno", "Dumbledore", "Piper", "Comanche", "Sapphire", "Fern", "Prudence", "Mote", "Mork", "Mulder", "Black Elk"), 
+                        age = c(14,12, 14, 14, 13, 14, 12, 14, 17, 12, 14, 12, 11, 10))
+
+# Bird weight
+bird_weights <- data.frame(date = rep(c('2021-02-15', '2021-02-16', '2021-02-17', '2021-02-18', '2021-02-19', '2021-02-22', '2021-02-24', '2021-02-25', '2021-02-26', '2021-02-27', '2021-02-28', '2021-03-01', '2021-03-02', '2021-03-03', '2021-03-04', '2021-03-05', '2021-03-06', '2021-03-07', '2021-03-08'), each = 10),
+                           subject = rep(c('Comanche', 'Piper', 'Fozzie', 'Dartagnan', 'He-man', 'Uno', 'Prudence', 'Fern', 'Dumbledore', 'Sapphire'), times = 19),
+                           phase = as.ordered(c(rep(1, 50), rep(2, 60), rep(3, 80))),
+                           weight = c('108', '95.6', '104.6', '98.6', '106.7', '89.2', '103.1', '94.9', '98', '90', '108', '95.3', '103.5', '98.5', '107.4', '90', '101.6', '95.2', '99.8', '87.7', '106.4', '96.1', '102.1', '98.3', '106.7', '89.4', '102.4', '95.1', '99.3', '86.4', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.5', '94.5', '99.9', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '101.4', '94.7', '99.8', 'NA', '108.2', '97', '104.3', '99.4', '107.8', '91.2', '102.3', '95.8', '100.1', '88.8', '108.1', '96.7', '102.7', '100.8', '107.5', '90.2', '100.8', '97.5', '100.3', '88.7', '108.3', '95.1', '103.6', '101', '107.1', '89.3', '100.3', '97.2', '101', '89.1', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.5', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.4', '99.2', '102.5', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.4', '100.2', '102.6', 'NA', '106', '95.5', '103.8', '100.7', '105.1', '90.7', '103.6', '97.6', '102.2', '89.7', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.3', '100.4', '104.9', 'NA', '108.1', '95.3', '103.8', '100.9', '110.3', '89.8', '100.1', '99', '102.9', '89.5', '108.6', '97.1', '104.8', 'NA', 'NA', '91.4', '101.1', '99.8', '102.6', '91.3', '109.4', '95.5', '103.5', '102.2', '108.1', '90.1', '101.7', '99.5', '100.3', '89.4', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.1', '98.7', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '101.7', 'NA', '108.9', '96.3', '103.6', '102.6', '108.3', '91.7', '102.8', '98.4', '100.9', '89.9')) |> 
+  mutate(weight = na_if(weight, "NA"),
+         weight = as.numeric(weight))
+
+## Analyze data -----
+
+weight_means <- bird_weights |> 
+  summarise(mean_weight = mean(weight, na.rm = TRUE), .by = c(subject, phase)) 
+weight_wsci <- weight_means |> 
+  wsci(id = "subject", dv = "mean_weight", factors = "phase") |> 
+  summary()
+weight_phase <- weight_means |> 
+  summarise(weight = mean(mean_weight), .by = c(subject, phase))
+
+weight_intercept_model <- lmer(weight ~ (1 | subject), data = weight_phase)
+weight_phase_model <- lmer(weight ~ phase + (1 | subject), data = weight_phase)
+
+weight_phase_comparison <- test_performance(weight_intercept_model, weight_phase_model)
+
+
 # Activity data -----------------------------------------------------------
 
 ## Import data -----
@@ -68,7 +100,7 @@ activity_data <- read_csv("wolff_stevens_2024_data1.csv") |>
   mutate(phase = case_when(phase == 1 ~ "Pre", 
                            phase == 2 ~ "During",
                            phase == 3 ~ "Post"),
-         phase = as.factor(phase),
+         phase = as.ordered(phase),
          phase = fct_relevel(phase, "Pre", "During", "Post"))
 daily_recordings <- activity_data |> 
   count(date)
@@ -275,7 +307,4 @@ daily_behavior_longer |>
 geom_text(x = Inf, y = Inf, label = daily_behavior_longer$bf10, hjust = 1.05, vjust = 1.5, size = 3)
 ggsave("figures/behavior_freq_phase.png", width = 8, height = 8, scale = 0.8)
 
-
-# Calculate bird colony age
-bird_ages <- data.frame(age = c(14,12,14,14,13,14,12,14,17,12,14,12,11,10), subject = c("Fozzie", "Dartagnan", "He-man", "Uno", "Dumbledore", "Piper", "Comanche", "Sapphire", "Fern", "Prudence", "Mote", "Mork", "Mulder", "Black Elk"))
 

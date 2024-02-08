@@ -3,7 +3,7 @@
 
 -   Created on 2024-02-05 by Jeffrey R. Stevens
     (<jeffrey.r.stevens@gmail.com>)
--   Finalized on 2024-02-06
+-   Finalized on 2024-02-08
 
 This repository provides the reproducible research materials for our project that investigates how moving from individual to pair housing influences activity and behavior in pinyon jays (materials available at [Open Science Framework](https://osf.io/v9r6q/). This includes the following:
 
@@ -15,7 +15,7 @@ This repository provides the reproducible research materials for our project tha
 
 If you use any of these materials, please cite:
 
-Wolff, L.M., & Stevens, J.R. (2024). Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behavior. https://doi.org/?????
+Wolff, L.M., & Stevens, J.R. (2024). Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behavior. https://doi.org/10.1101/2024.02.07.579343
 
 ## Summary
 
@@ -41,7 +41,7 @@ No additional restrictions — You may not apply legal terms or technological me
 -   date - date of recording
 -   timeofday - time of day of recording
 -   phase - Study phase (Pre-move, During-move, or Post-move)
--   activity - Mean number of pixel changes between frames for one recording (divided by 1000)
+-   activity - Mean number of pixel changes between frames for one recording
 
 `wolff_stevens_2024_data2.csv`
 
@@ -97,7 +97,7 @@ engines such as <a href="https://g.co/datasetsearch">Google Dataset Search</a>.
 </tr>
 <tr>
 <td>description</td>
-<td><code itemprop="description">The dataset from the paper <a href="https://doi.org/?????">Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behavior</a>. This study recorded 74 15-minute samples of 12 captive pinyon jays (Gymnorhinus cyanocephalus) in their home rooms in the Avian Cognition Lab at the University of Nebraska-Lincoln over a three week period in Feb-Mar 2021. For the first week, the birds were housed singly. At the beginning of the second week, the bird were moved to pair housing. From the video, we both estimated bird activity levels from pixel changes in the videos and directly measured 16 behaviors of the birds. The first data file contains activity level data with the mean pixel change for each of the 74 recordings (each row representing data from one recording). The second data file contains the frequencies of the 16 behaviors for each 10-second video sample for each pair in each recording. It includes both the full set of scored behavioral data for the pre- and post-move recordings and a subset of recordings used to calculate the inter-rater reliability (each row representing data from one sample for one pair in one recording).</code></td>
+<td><code itemprop="description">The dataset from the paper <a href="https://doi.org/10.1101/2024.02.07.579343">Less activity means improved welfare? How pair housing influences pinyon jay (<i>Gymnorhinus cyanocephalus</i>) behavior</a>. This study recorded 74 15-minute samples of 12 captive pinyon jays (<i>Gymnorhinus cyanocephalus</i>) in their home rooms in the Avian Cognition Lab at the University of Nebraska-Lincoln over a three week period in Feb-Mar 2021. For the first week, the birds were housed singly. At the beginning of the second week, the bird were moved to pair housing. From the video, we both estimated bird activity levels from pixel changes in the videos and directly measured 16 behaviors of the birds. The first data file contains activity level data with the mean pixel change for each of the 74 recordings (each row representing data from one recording). The second data file contains the frequencies of the 16 behaviors for each 10-second video sample for each pair in each recording. It includes both the full set of scored behavioral data for the pre- and post-move recordings and a subset of recordings used to calculate the inter-rater reliability (each row representing data from one sample for one pair in one recording).</code></td>
 </tr>
 </tr>
 <tr>
@@ -110,7 +110,7 @@ engines such as <a href="https://g.co/datasetsearch">Google Dataset Search</a>.
 </tr>
 <tr>
 <td>citation</td>
-<td><code itemprop="citation">https://doi.org/????</code></td>
+<td><code itemprop="citation">https://doi.org/10.1101/2024.02.07.579343</code></td>
 </tr>
 <tr>
 <td>license</td>
