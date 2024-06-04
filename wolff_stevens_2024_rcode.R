@@ -27,7 +27,7 @@
 
 library(BayesFactor)
 library(easystats)
-library(formatstats)
+library(cocoon)
 
 library(lme4)
 library(papaja)
@@ -41,11 +41,11 @@ library(tidyverse)
 # Formats statistics from contrasts
 extract_contrasts <- function(term1, term2) {
   contrast <- filter(activity_contrasts, (Level1 == term1 & Level2 == term2) | (Level1 == term2 & Level2 == term1))
-  paste0("Mean difference = ", formatstats::format_num(contrast$Difference, digits = 2), ", ", 
-         "_t_(", contrast$df, ") = ", formatstats::format_num(contrast$t), ", ", 
-         formatstats::format_p(contrast$p, pzero = TRUE), ", ",
-         "_d_ = ", formatstats::format_num(contrast$d), ", ", 
-         formatstats::format_bf(contrast$bf))
+  paste0("Mean difference = ", cocoon::format_num(contrast$Difference, digits = 2), ", ", 
+         "_t_(", contrast$df, ") = ", cocoon::format_num(contrast$t), ", ", 
+         cocoon::format_p(contrast$p, pzero = TRUE), ", ",
+         "_d_ = ", cocoon::format_num(contrast$d), ", ", 
+         cocoon::format_bf(contrast$bf))
 }
 
 # Creates table of within-subject confidence intervals
@@ -66,16 +66,26 @@ cvd_colors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"
 
 ## Create data frames -----
 # Bird age
-bird_ages <- data.frame(subject = c("Fozzie", "Dartagnan", "He-man", "Uno", "Dumbledore", "Piper", "Comanche", "Sapphire", "Fern", "Prudence", "Mote", "Mork", "Mulder", "Black Elk"), 
-                        age = c(14,12, 14, 14, 13, 14, 12, 14, 17, 12, 14, 12, 11, 10))
+bird_ages <- data.frame(subject = c("Fozzie", "Dartagnan", "He-man", "Uno", "Dumbledore", "Piper", "Comanche", "Sapphire", "Fern", "Prudence", "Mote", "Mork", "Mulder", "Black Elk"),
+                        sex = c("Male", "Male", "Male", "Female", "Male", "Female", "Male", "Female", "Male", "Male", "Male", "Male", "Male", "Male"),
+                        capture_year = c(2009, 2011, 2009, 2009, 2010, 2009, 2011, 2009, 2006, 2011, 2007, 2009, 2010, 2011),
+                        capture_age = c("Adult", NA, "Adult", "Juvenile", NA, "Adult", "Juvenile", "Adult", NA, "Juvenile", NA, "Adult", NA, NA),
+                        capture_location = c("CA", "CA", "CA", "CA", "AZ", "CA", "CA", "CA", "AZ", "CA", "AZ", "CA", "AZ", "CA"),
+                        age = c(14, 12, 14, 14, 13, 14, 12, 14, 17, 12, 14, 12, 11, 10))
 
 # Bird weight
 bird_weights <- data.frame(date = rep(c('2021-02-15', '2021-02-16', '2021-02-17', '2021-02-18', '2021-02-19', '2021-02-22', '2021-02-24', '2021-02-25', '2021-02-26', '2021-02-27', '2021-02-28', '2021-03-01', '2021-03-02', '2021-03-03', '2021-03-04', '2021-03-05', '2021-03-06', '2021-03-07', '2021-03-08'), each = 10),
                            subject = rep(c('Comanche', 'Piper', 'Fozzie', 'Dartagnan', 'He-man', 'Uno', 'Prudence', 'Fern', 'Dumbledore', 'Sapphire'), times = 19),
-                           phase = as.ordered(c(rep(1, 50), rep(2, 60), rep(3, 80))),
+                           # phase = as.ordered(c(rep(1, 50), rep(2, 60), rep(3, 80))),
                            weight = c('108', '95.6', '104.6', '98.6', '106.7', '89.2', '103.1', '94.9', '98', '90', '108', '95.3', '103.5', '98.5', '107.4', '90', '101.6', '95.2', '99.8', '87.7', '106.4', '96.1', '102.1', '98.3', '106.7', '89.4', '102.4', '95.1', '99.3', '86.4', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.5', '94.5', '99.9', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '101.4', '94.7', '99.8', 'NA', '108.2', '97', '104.3', '99.4', '107.8', '91.2', '102.3', '95.8', '100.1', '88.8', '108.1', '96.7', '102.7', '100.8', '107.5', '90.2', '100.8', '97.5', '100.3', '88.7', '108.3', '95.1', '103.6', '101', '107.1', '89.3', '100.3', '97.2', '101', '89.1', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.5', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.4', '99.2', '102.5', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.4', '100.2', '102.6', 'NA', '106', '95.5', '103.8', '100.7', '105.1', '90.7', '103.6', '97.6', '102.2', '89.7', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '102.3', '100.4', '104.9', 'NA', '108.1', '95.3', '103.8', '100.9', '110.3', '89.8', '100.1', '99', '102.9', '89.5', '108.6', '97.1', '104.8', 'NA', 'NA', '91.4', '101.1', '99.8', '102.6', '91.3', '109.4', '95.5', '103.5', '102.2', '108.1', '90.1', '101.7', '99.5', '100.3', '89.4', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '103.1', '98.7', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', '101.7', 'NA', '108.9', '96.3', '103.6', '102.6', '108.3', '91.7', '102.8', '98.4', '100.9', '89.9')) |> 
   mutate(weight = na_if(weight, "NA"),
-         weight = as.numeric(weight))
+         weight = as.numeric(weight)) |> 
+  mutate(phase = case_when(
+    date < "2021-02-22" ~ "pre",
+    date < "2021-02-29" ~ "during",
+    date <= "2021-03-08" ~ "post",
+    .default = NA
+  ), .after = date)
 
 ## Analyze data -----
 
@@ -92,6 +102,11 @@ weight_phase_model <- lmer(weight ~ phase + (1 | subject), data = weight_phase)
 
 weight_phase_comparison <- test_performance(weight_intercept_model, weight_phase_model)
 
+weight_phase_wide <- weight_phase |> 
+  pivot_wider(id_cols = subject, names_from = phase, values_from = weight, names_prefix = "weight_")
+
+bird_demo_table <- right_join(bird_ages, weight_phase_wide, by = "subject") |> 
+  select(!weight_during)
 
 # Activity data -----------------------------------------------------------
 
@@ -111,13 +126,14 @@ activity_intercept_model <- lm(activity ~ 1, data = activity_data)
 activity_phase_model <- lm(activity ~ phase, data = activity_data)
 activity_time_model <- lm(activity ~ timeofday, data = activity_data)
 activity_phase_time_model <- lm(activity ~ phase + timeofday, data = activity_data)
+activity_phase_time_interaction_model <- lm(activity ~ phase * timeofday, data = activity_data)
 
 # Compare models and select best
-activity_compare <- compare_performance(activity_intercept_model, activity_phase_model, activity_time_model, activity_phase_time_model)
-activity_test <- test_performance(activity_intercept_model, activity_phase_model, activity_time_model, activity_phase_time_model)
+activity_compare <- compare_performance(activity_intercept_model, activity_phase_model, activity_time_model, activity_phase_time_model, activity_phase_time_interaction_model)
+activity_test <- test_performance(activity_intercept_model, activity_phase_model, activity_time_model, activity_phase_time_model, activity_phase_time_interaction_model)
 activity_models <- left_join(activity_compare, activity_test)
 activity_model <- eval(parse(text = activity_models$Name[which(activity_models$BF == max(activity_models$BF, na.rm = TRUE))]))
-activity_model_table <- data.frame(name = c("Intercept only", "Phase only", "Time of day only", "Phase and time of day"), model = c("activity ~ 1", "activity ~ phase", "activity ~ timeofday", "activity ~ phase + timeofday"), aic = activity_models$AIC, bic = activity_models$BIC, bf = activity_models$BF)
+activity_model_table <- data.frame(name = c("Intercept only", "Phase only", "Time of day only", "Phase and time of day (main effects only)", "Phase and time of day (interaction)"), model = c("activity ~ 1", "activity ~ phase", "activity ~ timeofday", "activity ~ phase + timeofday", "activity ~ phase * timeofday"), aic = activity_models$AIC, bic = activity_models$BIC, bf = activity_models$BF)
 
 # Check model assumptions
 performance::check_model(activity_model)
@@ -282,8 +298,8 @@ daily_behavior_longer <- daily_behavior_long |>
   left_join(daily_behavior_ttest, by = "behavior") |> 
   left_join(daily_behavior_bf, by = "behavior") |> 
   rowwise() |>
-  mutate(bf10 = formatstats::format_bf(bf, cutoff = 10000, digits1 = 2, italics = FALSE, subscript = ""),
-         p_value = formatstats::format_p(pvalue, italics = FALSE, pzero = TRUE))
+  mutate(bf10 = cocoon::format_bf(bf, cutoff = 10000, digits1 = 2, italics = FALSE, subscript = ""),
+         p_value = cocoon::format_p(pvalue, italics = FALSE, pzero = TRUE))
 
 
 ## Plot data -----

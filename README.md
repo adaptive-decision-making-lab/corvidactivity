@@ -3,9 +3,9 @@
 
 -   Created on 2024-02-05 by Jeffrey R. Stevens
     (<jeffrey.r.stevens@gmail.com>)
--   Finalized on 2024-02-08
+-   Finalized on 2024-06-04
 
-This repository provides the reproducible research materials for our project that investigates how moving from individual to pair housing influences activity and behavior in pinyon jays (materials available at [Open Science Framework](https://osf.io/v9r6q/). This includes the following:
+This repository provides the reproducible research materials for our project that investigates how moving from individual to pair housing influences activity and behavior in pinyon jays (materials available at [Open Science Framework](https://osf.io/v9r6q/)). This includes the following:
 
 -   Data
 -   R script for data analysis
@@ -15,7 +15,7 @@ This repository provides the reproducible research materials for our project tha
 
 If you use any of these materials, please cite:
 
-Wolff, L.M., & Stevens, J.R. (2024). Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behavior. https://doi.org/10.1101/2024.02.07.579343
+Wolff, L.M., & Stevens, J.R. (forthcoming). Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behavior. _Animal Welfare_. https://doi.org/10.1101/2024.02.07.579343
 
 ## Summary
 
