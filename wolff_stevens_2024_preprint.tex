@@ -54,14 +54,28 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -164,10 +178,11 @@
 \makeatletter
 \xapptocmd\appendix
   {\xapptocmd\section
-    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi\\: #1}}
+    {\addcontentsline{toc}{section}{\appendixname\ifoneappendix\else~\theappendix\fi: #1}}
     {}{\InnerPatchFailed}%
   }
 {}{\PatchFailed}
+\makeatother
 \keywords{activity levels, corvid, pair housing, stereotypies, welfare}
 \usepackage{csquotes}
 \usepackage{orcidlink}
@@ -195,11 +210,13 @@
 
 \authornote{
 
-\textbf{This preprint has been accepted for publication at \emph{Animal Welfare}. }
+\textbf{This preprint has been published at \emph{Animal Welfare}: }
+
+\textbf{Wolff, L. M., \& Stevens, J. R. (2024). Less activity means improved welfare? How pair housing influences pinyon jay (\emph{Gymnorhinus cyanocephalus}) behaviour. \emph{Animal Welfare}, 33, e49. \url{https://doi.org/10.1017/awf.2024.40}}
 
 BioArXiv: \url{https://doi.org/10.1101/2024.02.07.579343}
 
-Version: 2024-06-04
+Version: 2024-11-07
 
 London M. Wolff, \orcidlink{0000-0001-8359-2619} \url{https://orcid.org/0000-0001-8359-2619}.
 
@@ -349,7 +366,7 @@ For each of the 16 behaviours on the ethogram, coders recorded the number of tim
 
 \subsection{Data Analysis}\label{data-analysis}
 
-We used R (Version 4.4.0; R Core Team, 2024) and the R-packages \emph{BayesFactor} (Version 0.9.12.4.7; Morey \& Rouder, 2024), \emph{cocoon} (Version 0.0.0.9000; Stevens, 2024), \emph{easystats} (Version 0.7.1; Lüdecke et al., 2022), \emph{here} (Version 1.0.1; Müller, 2020), \emph{lme4} (Version 1.1.35.3; Bates et al., 2015), \emph{papaja} (Version 0.1.2; Aust \& Barth, 2023), \emph{patchwork} (Version 1.2.0; Pedersen, 2024), \emph{psych} (Version 2.4.3; Revelle, 2024), and \emph{tidyverse} (Version 2.0.0; Wickham et al., 2019) for our analyses. The manuscript was created using \emph{knitr} (Version 1.47, Xie, 2015), \emph{kableExtra} (Version 1.3.4.9000, Zhu, 2023), \emph{rmarkdown} (Version 2.27, Xie et al., 2018), and \emph{papaja} (Version 0.1.2, Aust \& Barth, 2023). Data, analysis scripts, supplementary materials, and reproducible research materials are available at the Open Science Framework (\url{https://osf.io/v9r6q/}).
+We used R (Version 4.4.2; R Core Team, 2024) and the R-packages \emph{BayesFactor} (Version 0.9.12.4.7; Morey \& Rouder, 2024), \emph{cocoon} (Version 0.1.0.9000; Stevens, 2024), \emph{easystats} (Version 0.7.3; Lüdecke et al., 2022), \emph{here} (Version 1.0.1; Müller, 2020), \emph{lme4} (Version 1.1.35.5; Bates et al., 2015), \emph{papaja} (Version 0.1.3; Aust \& Barth, 2023), \emph{patchwork} (Version 1.3.0; Pedersen, 2024), \emph{psych} (Version 2.4.6.26; Revelle, 2024) and \emph{tidyverse} (Version 2.0.0; Wickham et al., 2019) for our analyses. The manuscript was created using \emph{knitr} (Version 1.48, Xie, 2015), \emph{kableExtra} (Version 1.4.0, Zhu, 2023), \emph{rmarkdown} (Version 2.29, Xie et al., 2018), and \emph{papaja} (Version 0.1.3, Aust \& Barth, 2023). Data, analysis scripts, supplementary materials, and reproducible research materials are available at the Open Science Framework (\url{https://osf.io/v9r6q/}).
 
 Though we present both Bayesian and frequentist statistics (i.e., \emph{p} values), we draw inferences based on Bayes factors because they offer bidirectional information about evidence supporting both the alternative (H\textsubscript{1}) and the null (H\textsubscript{0}) hypotheses. Bayes factors provide the ratio of evidence for H\textsubscript{1} over evidence for H\textsubscript{0} (Wagenmakers, 2007; Wagenmakers et al., 2010). Therefore, a Bayes factor of 3 (\emph{BF}\textsubscript{10}=3) indicates three times more evidence for H\textsubscript{1} than H\textsubscript{0}, whereas a Bayes factor of 1/3 (the reciprocal of 3) indicates 3 times more evidence for H\textsubscript{0} than H\textsubscript{1}. We interpret Bayes factors based on Wagenmakers et al. (2018), where a \emph{BF}\textsubscript{10} \textgreater{} 3 is considered sufficient evidence for the alternative hypothesis, \emph{BF}\textsubscript{10} \textless{} 1/3 is considered sufficient evidence for the null hypothesis, and 1/3 \textless{} \emph{BF}\textsubscript{10} \textless{} 3 indicate neither hypothesis has evidence supporting it (suggesting the sample size is too small to draw conclusions).
 

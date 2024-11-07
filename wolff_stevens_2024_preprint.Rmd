@@ -19,11 +19,13 @@ affiliation:
 
 
 authornote: |
-  **This preprint has been accepted for publication at _Animal Welfare_. **
+  **This preprint has been published at _Animal Welfare_: **
+
+  **Wolff, L. M., & Stevens, J. R. (2024). Less activity means improved welfare? How pair housing influences pinyon jay (_Gymnorhinus cyanocephalus_) behaviour. _Animal Welfare_, 33, e49. https://doi.org/10.1017/awf.2024.40**
 
   BioArXiv: https://doi.org/10.1101/2024.02.07.579343
 
-  Version: 2024-06-04 
+  Version: 2024-11-07 
 
   London M. Wolff, \orcidlink{0000-0001-8359-2619} [https://orcid.org/0000-0001-8359-2619](https://orcid.org/0000-0001-8359-2619).
  
